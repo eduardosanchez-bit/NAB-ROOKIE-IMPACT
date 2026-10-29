@@ -1,0 +1,6 @@
+numpy>=1.26
+pandas>=2.1
+nba_api>=1.5
+streamlit>=1.50
+plotly>=5.20
+pytest>=8.0

@@ -24,7 +24,7 @@ All data comes from stats.nba.com through the [`nba_api`](https://github.com/swa
 | `onoff_*` | Team net rating with each player on and off court |
 | `draft.csv` | Draft year, round and overall pick |
 
-Raw downloads go to `data/raw/` (git-ignored). The processed table `data/processed/rookies.csv` **is committed** so the app runs anywhere without downloading anything.
+Raw downloads go to `data/raw/` and the processed table to `data/processed/rookies.csv`. **Both are committed**, so the app runs anywhere without downloading anything.
 
 ## Setup
 
@@ -36,20 +36,28 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 1. Download the data
+### 1. Download the data (from your own computer)
+
+stats.nba.com ignores most cloud servers (Codespaces, Streamlit Cloud…), so the download must run from a normal home connection. `scripts/download_data.py` needs only `nba_api` and the standard library (no pandas), so it also works on machines where pandas is blocked.
 
 ```bash
-python scripts/update_data.py --start 2022 --end 2024 --skip-onoff   # quick first test (~1 minute)
-python scripts/update_data.py                                         # everything (~15-20 minutes)
+python -m pip install nba_api requests
+python scripts/download_data.py --start 2022 --end 2024 --skip-onoff   # quick test (~1 minute)
+python scripts/download_data.py                                         # everything (~15-20 minutes)
 ```
 
-Requests are cached on disk, so you can stop and re-run without starting over. stats.nba.com sometimes blocks or throttles cloud servers; if it times out, try again later, increase `--pause`, or run the script from a home connection.
+Requests are cached on disk, so you can stop and re-run without starting over. The script checks the connection first and fails fast with a clear message if the NBA does not answer.
 
-### 2. Run the app
+Then commit the raw files: `git add data/raw && git commit -m "Add raw NBA data" && git push`.
+
+### 2. Build the dataset and run the app (anywhere pandas works)
 
 ```bash
+python scripts/build_dataset.py
 python -m streamlit run app.py
 ```
+
+Commit `data/processed/rookies.csv` so the deployed app has data.
 
 ### 3. Tests
 
@@ -75,14 +83,15 @@ Value vs. draft = actual − Expected(pick)   (undrafted modelled as pick 61)
 ```
 nba-rookie-impact/
 ├── app.py                    # Streamlit dashboard
-├── scripts/update_data.py    # download + build in one command
+├── scripts/
+│   ├── download_data.py      # nba_api → raw CSV (no pandas, cached)
+│   └── build_dataset.py      # raw CSV → processed table
 ├── src/rookies/
-│   ├── fetch.py              # nba_api → raw CSV (cached)
 │   ├── metrics.py            # merge, court %, Game Score, on/off, draft
 │   ├── value.py              # expected production by draft slot
 │   └── charts.py             # Plotly figures
 ├── tests/                    # pytest suite on synthetic data
-└── data/processed/rookies.csv
+└── data/{raw,processed}/
 ```
 
 ## Limitations

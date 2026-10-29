@@ -35,7 +35,7 @@ def game_score(df: pd.DataFrame) -> pd.Series:
 def read_raw(raw_dir: Path, kind: str) -> pd.DataFrame:
     files = sorted(Path(raw_dir).glob(f"{kind}_*.csv"))
     if not files:
-        raise FileNotFoundError(f"No '{kind}_*.csv' files in {raw_dir}. Run `python scripts/update_data.py` first.")
+        raise FileNotFoundError(f"No '{kind}_*.csv' files in {raw_dir}. Run `python scripts/download_data.py` first.")
     return pd.concat((pd.read_csv(f) for f in files), ignore_index=True)
 
 

@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
+.env
+.DS_Store
+# data/raw/ and data/processed/ ARE committed: the download runs on a home connection,
+# the build and the app run anywhere

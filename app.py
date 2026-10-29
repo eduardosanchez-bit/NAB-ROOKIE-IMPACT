@@ -37,7 +37,7 @@ st.caption("How much do rookies play, what do they contribute, and is it more or
 
 if not DATA_PATH.exists():
     st.info(
-        "No data found yet. Download it with `python scripts/update_data.py` "
+        "No data found yet. Download it with `python scripts/download_data.py` "
         "(see the README), then restart the app."
     )
     st.stop()

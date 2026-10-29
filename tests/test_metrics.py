@@ -75,5 +75,5 @@ def test_min_minutes_filter(tmp_path):
 
 
 def test_missing_raw_files_give_clear_error(tmp_path):
-    with pytest.raises(FileNotFoundError, match="update_data"):
+    with pytest.raises(FileNotFoundError, match="download_data"):
         build_rookie_table(tmp_path)

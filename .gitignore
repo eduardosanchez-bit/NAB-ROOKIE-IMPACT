@@ -9,6 +9,5 @@ build/
 dist/
 .env
 .DS_Store
-# raw downloads can be re-created with scripts/update_data.py;
-# the processed dataset in data/processed/ IS committed so the app runs anywhere
-data/raw/
+# data/raw/ and data/processed/ ARE committed: the download runs on a home connection,
+# the build and the app run anywhere
